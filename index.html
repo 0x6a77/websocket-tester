@@ -165,7 +165,7 @@
 	$(function() {
 		$('#openButton').popover({placement: 'right', trigger: 'hover', title: 'Open/Close Button', content: 'This button opens/closes a websocket to the server specified in the URL.'});
 		$('#sendButton').popover({placement: 'right', trigger: 'hover', title: 'Send Button', content: 'Send the data.  Only enabled when the websocket is open and the button is green.'});
-		$('#websocketUrl').popover({placement: 'right', trigger: 'hover', title: 'Server URL', content: 'Enter a URL of the websocket server. Supports ws:// and wss:// (TLS/SSL).'});
+		$('#websocketUrl').popover({placement: 'right', trigger: 'hover', title: 'Server URL', content: 'Enter URL of the websocket server. Supports ws:// and wss:// (TLS/SSL).'});
 		$('#dataToSend').popover({placement: 'top', trigger: 'hover', title: 'Message Data', content: 'Enter any data you wish to send to the server.  It will remember the last 20 unique messages in HTML5 local storage.'});
 		$('#messageList').popover({placement: 'top', trigger: 'hover', title: 'Message List', content: 'This is a resizable list of messages exchanged with the websocket server during this session.'});
 	});

@@ -9,10 +9,10 @@
 
  * You may use this intellectual property as you wish if you agree to these terms:
  *
- * 1. Accept this property "as-is," accepting that it probably contains errors, and take full responsibility for any consequences of its use.
+ * 1. Accept this property 'as-is,' accepting that it probably contains errors, and take full responsibility for any consequences of its use.
  * 2. Retain this license for any derivative works you create with this property.
  * 3. Entertain the notion that discovery is a messy business of false-starts, mistakes, tears, gentle curses, and sometimes joy and wonder,
- *        and that there is no single, i.e. "right," way to discovery. 
+ *        and that there is no single, i.e. 'right,' way to discovery. 
  *
  * This license embraces the Second Golden Hacker Era (Woz era 2.0).
  * Dale Dougherty of Make Magazine, Nathan Seidle of SparkFun and many others have ushered in this new era,
@@ -20,7 +20,7 @@
  * Hackers have no need for elitist personalities who see the world top-down, believe there are lesser hackers
  * and send mean emails to people!
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
@@ -114,10 +114,11 @@
 
 <div class='span12 row-fluid'>
 	<h3 class='span5'>Websocket Server Tester</h3><br><br><br>
+
 	<div class='span11'>
 		<span class='nowrap'>
 			<button id='openButton' class='span1 btn btn-large btn-primary' onclick='websocketToggle()'>Open</button>
-			<input id='websocketUrl' type='text' class='span2 entry-field' placeholder='Websocket Url' list='servers'>
+			<input id='websocketUrl' type='text' class='span2 entry-field' placeholder='Websocket Url (ws:// & wss:// supported)' list='servers'>
 			<datalist id='servers'>
 				<option value='ws://echo.websocket.org'></option>
 			</datalist>
@@ -132,7 +133,8 @@
 	</div>
 
 	<h3 class='span5'>Messages</h3>
-	<div class='span11 messageTable'>
+
+	<div id='messageList' class='span11 messageTable'>
 		<table class='table table-striped table-condensed'>
 			<thead>
 			<tr>
@@ -147,14 +149,27 @@
 	</div>
 </div>
 <div class='footer'>
-	Copyright (c) 2013 
+	Copyright (c) 2013
 	<a href='http://plus.google.com/118123969654246129196' target='blank'>Jeff Williams</a>
-	Released under the 
+	Released under the
 	<a href='http://github.com/jw-gadgetworks/hackerluv' target='blank'>Hacker Luv License</a>
 	<br>
 </div>
 
+<script src='http://twitter.github.com/bootstrap/assets/js/jquery.js'></script>
+<script src='http://twitter.github.com/bootstrap/assets/js/bootstrap.js'></script>
+<script src='http://twitter.github.com/bootstrap/assets/js/bootstrap-popover.js'></script>
+
 <script type='text/javascript'>
+
+	$(function() {
+		$('#openButton').popover({placement: 'right', trigger: 'hover', title: 'Open/Close Button', content: 'This button opens/closes a websocket to the server specified in the URL.'});
+		$('#sendButton').popover({placement: 'right', trigger: 'hover', title: 'Send Button', content: 'Send the data.  Only enabled when the websocket is open and the button is green.'});
+		$('#websocketUrl').popover({placement: 'right', trigger: 'hover', title: 'Server URL', content: 'Enter a URL of the websocket server. Supports ws:// and wss:// (TLS/SSL).'});
+		$('#dataToSend').popover({placement: 'top', trigger: 'hover', title: 'Message Data', content: 'Enter any data you wish to send to the server.  It will remember the last 20 unique messages in HTML5 local storage.'});
+		$('#messageList').popover({placement: 'top', trigger: 'hover', title: 'Message List', content: 'This is a resizable list of messages exchanged with the websocket server during this session.'});
+	});
+
 	function hasLocalStorage() {
 		return typeof(Storage) !== 'undefined';
 	}

@@ -91,7 +91,7 @@
 		};
 	</script>
 
-	<script type="text/javascript">
+	<script type='text/javascript'>
 		var _gaq = _gaq || [];
 		_gaq.push(['_setAccount', 'UA-37447812-1']);
 		_gaq.push(['_trackPageview']);
@@ -114,7 +114,7 @@
 		<span class='nowrap'>
 			<button id='openButton' class='btn btn-large btn-primary' onclick='websocketToggle()'>Open</button>
 		    <div class='btn-group'>
-			    <button class="btn dropdown-toggle" data-toggle="dropdown">Recent <span class="caret"></span></button>
+			    <button class='btn dropdown-toggle' data-toggle='dropdown'>Recent <span class='caret'></span></button>
 			    <ul id='recentServers' class='dropdown-menu'>
 				    <li><a>ws://echo.websocket.org</a></li>
 				    <li><a>wss://echo.websocket.org</a></li>
@@ -130,7 +130,7 @@
 		<span class='nowrap'>
 			<button id='sendButton' class='btn btn-large btn-danger' disabled='true' onclick='websocketSend()'>Send</button>
 		    <div class='btn-group'>
-			    <button class="btn dropdown-toggle" data-toggle="dropdown">Recent <span class="caret"></span></button>
+			    <button class='btn dropdown-toggle' data-toggle='dropdown'>Recent <span class='caret'></span></button>
 			    <ul id='recentMessages' class='dropdown-menu'>
 			    </ul>
 		    </div>
@@ -154,22 +154,35 @@
 		</table>
 	</div>
 </div>
-<div class='footer'>
-	<table class='span6 table table-striped table-condensed'>
-		<thead>
-		<tr>
-			<th style='width: 50px'><a href='http://github.com/jw-gadgetworks/websocket-tester/wiki/WebSocketTester' target='blank'>Documentation</a></th>
-			<th style='width: 100px'>Copyright (c) 2013 <a href='http://plus.google.com/118123969654246129196' target='blank'>Jeff Williams</a></th>
-			<th style='width: 100px'>Released under the <a href='http://github.com/jw-gadgetworks/hackerluv' target='blank'>Hacker Luv License</a></th>
-		</tr>
-		</thead>
-	</table>
+<div class='span12 footer'>
+	<div class='span2'>
+		<div class='g-plusone'></div>
+	</div>
+	<div class='span12'>
+		<table class='table table-striped table-condensed'>
+			<thead>
+			<tr>
+				<th><a href='http://github.com/jw-gadgetworks/websocket-tester/wiki/WebSocketTester' target='blank'>Documentation</a></th>
+				<th>Copyright (c) 2013 <a href='http://plus.google.com/118123969654246129196' target='blank'>Jeff Williams</a></th>
+				<th>Released under the <a href='http://github.com/jw-gadgetworks/hackerluv' target='blank'>Hacker Luv License</a></th>
+			</tr>
+			</thead>
+		</table>
+	</div>
 </div>
 
 <script src='http://twitter.github.com/bootstrap/assets/js/jquery.js'></script>
 <script src='http://twitter.github.com/bootstrap/assets/js/bootstrap.js'></script>
 <script src='http://twitter.github.com/bootstrap/assets/js/bootstrap-popover.js'></script>
 <script src='http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js'></script>
+
+<script type='text/javascript'>
+	(function() {
+		var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		po.src = 'https://apis.google.com/js/plusone.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+	})();
+</script>
 
 <script type='text/javascript'>
 

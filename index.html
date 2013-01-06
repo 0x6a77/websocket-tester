@@ -85,50 +85,46 @@
 	<link rel='shortcut icon' href='../assets/ico/favicon.png'>
 
 	<script type='text/javascript'>
-		var websocket = undefined;
+		var websocket_ = undefined;
 
 		window.onload = function() {
-			recallEntries('servers');
-			recallEntries('sentMessages');
-		}
-
-		function recallEntries(fieldName) {
-			if (hasLocalStorage) {
-				var messageList = document.getElementById(fieldName);
-				for (var key = 0; key <= 19; key++) {
-					if (localStorage[fieldName + key] !== undefined) {
-						var value = localStorage[fieldName + key];
-						var option = document.createElement('option');
-						option.setAttribute('value', value);
-						messageList.appendChild(option);
-					}
-				}
-			}
-		}
+			$('.dropdown-toggle').dropdown();
+		};
 
 	</script>
 
 </head>
 
-<body>
+<body onkeyup='handleEnter()'>
 
 <div class='span12 row-fluid'>
 	<h3 class='span5'>Websocket Server Tester</h3><br><br><br>
 
 	<div class='span11'>
 		<span class='nowrap'>
-			<button id='openButton' class='span1 btn btn-large btn-primary' onclick='websocketToggle()'>Open</button>
+			<button id='openButton' class='btn btn-large btn-primary' onclick='websocketToggle()'>Open</button>
+		    <div class='btn-group'>
+			    <button class="btn dropdown-toggle" data-toggle="dropdown">Recent <span class="caret"></span></button>
+			    <ul id='recentServers' class='dropdown-menu'>
+				    <li><a>ws://echo.websocket.org</a></li>
+				    <li><a>wss://echo.websocket.org</a></li>
+			    </ul>
+		    </div>
 			<input id='websocketUrl' type='text' class='span3 entry-field' placeholder='Websocket Url (ws:// & wss:// supported)' list='servers'>
 			<datalist id='servers'>
 				<option value='ws://echo.websocket.org'></option>
+				<option value='wss://echo.websocket.org'></option>
 			</datalist>
 		</span>
 		<br>
 		<span class='nowrap'>
-			<button id='sendButton' class='span1 btn btn-large btn-danger' disabled='true' onclick='websocketSend()'>Send</button>
-			<input id='dataToSend' type='text' class='span11 entry-field' placeholder='Message data (Click to recall last 20 messages sent)' list='sentMessages'>
-			<datalist id='sentMessages'>
-			</datalist>
+			<button id='sendButton' class='btn btn-large btn-danger' disabled='true' onclick='websocketSend()'>Send</button>
+		    <div class='btn-group'>
+			    <button class="btn dropdown-toggle" data-toggle="dropdown">Recent <span class="caret"></span></button>
+			    <ul id='recentMessages' class='dropdown-menu'>
+			    </ul>
+		    </div>
+			<input id='dataToSend' type='text' class='span9 entry-field' placeholder='Message data' list='sentMessages'>
 		</span>
 	</div>
 
@@ -163,28 +159,56 @@
 <script src='http://twitter.github.com/bootstrap/assets/js/jquery.js'></script>
 <script src='http://twitter.github.com/bootstrap/assets/js/bootstrap.js'></script>
 <script src='http://twitter.github.com/bootstrap/assets/js/bootstrap-popover.js'></script>
+<script src='http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js'></script>
 
 <script type='text/javascript'>
-
-	$(function() {
-		$('#openButton').tooltip({placement: 'top', trigger: 'hover', title: 'Open/close a websocket to the specified URL.'});
-		$('#sendButton').tooltip({placement: 'Bottom', trigger: 'hover', title: 'Send data.  Enabled websocket is open.'});
-		$('#websocketUrl').tooltip({placement: 'right', trigger: 'hover', title: 'URL of a websocket server. Supports ws:// and wss:// (TLS/SSL).'});
-		$('#dataToSend').tooltip({placement: 'bottom', trigger: 'hover', title: 'Enter any data you wish to send to the server.  Will persist the last 20 unique messages in HTML5 local storage.'});
-		$('#messageList').tooltip({placement: 'top', trigger: 'hover', title: 'Resizable list of messages exchanged with the websocket server during this session.'});
-	});
 
 	function hasLocalStorage() {
 		return typeof(Storage) !== 'undefined';
 	}
 
-	function persistEntry(fieldName, entry) {
+	function handleEnter() {
+		if (event.keyCode == 13) {
+			websocketSend();
+		}
+	}
+
+	function recallEntries(storageType, entryFieldName) {
+		if (hasLocalStorage) {
+
+			// Get the list and clear it.
+			var prevItemsList = document.getElementById(storageType);
+			while (prevItemsList.firstChild) {
+				prevItemsList.removeChild(prevItemsList.firstChild);
+			}
+
+			// Add the stored items to the list.
+			for (var key = 0; key <= 19; key++) {
+				if (localStorage[storageType + key] !== undefined) {
+					var value = localStorage[storageType + key];
+					var li = document.createElement('li');
+					var a = document.createElement('a');
+					a.innerHTML = value;
+					li.appendChild(a);
+					prevItemsList.appendChild(li);
+				}
+			}
+
+			$(prevItemsList).find('a').click(function() {
+				var selection = $(this).text();
+				var urlElement = document.getElementById(entryFieldName);
+				urlElement.value = selection;
+			});
+		}
+	}
+
+	function persistEntry(storageType, entry, entryFieldName) {
 		if (hasLocalStorage) {
 
 			// Make sure we haven't already persisted this entry.
 			var foundEntry = false;
 			for (var key = 19; key > 0; key--) {
-				if (localStorage[fieldName + (key - 1)] === entry) {
+				if (localStorage[storageType + (key - 1)] === entry) {
 					foundEntry = true;
 					break;
 				}
@@ -193,12 +217,12 @@
 			// Now shift the existing items down by one.
 			if (foundEntry === false) {
 				for (var key = 19; key > 0; key--) {
-					if (localStorage[fieldName + (key - 1)] !== undefined) {
-						localStorage[fieldName + key] = localStorage[fieldName + (key - 1)];
+					if (localStorage[storageType + (key - 1)] !== undefined) {
+						localStorage[storageType + key] = localStorage[storageType + (key - 1)];
 					}
 				}
-				localStorage[fieldName + 0] = entry;
-				recallEntries(fieldName);
+				localStorage[storageType + 0] = entry;
+				recallEntries(storageType, entryFieldName);
 			}
 		}
 	}
@@ -207,32 +231,32 @@
 		if ('WebSocket' in window) {
 			var openButton = document.getElementById('openButton');
 			var sendButton = document.getElementById('sendButton');
-			if (websocket !== undefined) {
-				websocket.close();
-				websocket = undefined;
+			if (websocket_ !== undefined) {
+				websocket_.close();
+				websocket_ = undefined;
 			} else {
 				var urlElement = document.getElementById('websocketUrl');
 				if (urlElement !== null) {
 					var url = urlElement.value;
-					websocket = new WebSocket(url);
+					websocket_ = new WebSocket(url);
 					displayMessage('Open', url);
-					persistEntry('servers', url);
+					persistEntry('recentServers', url, 'websocketUrl');
 
 					openButton.innerHTML = 'Close';
 					sendButton.className = sendButton.className.replace('btn\-danger', 'btn\-success');
 					sendButton.disabled = false;
 				}
 
-				websocket.onmessage = function(event) {
+				websocket_.onmessage = function(event) {
 					var message = event.data;
 					displayMessage('Recv', message);
 				};
 
-				websocket.onclose = function() {
+				websocket_.onclose = function() {
 					openButton.innerHTML = 'Open';
 					sendButton.className = sendButton.className.replace('btn\-success', 'btn\-danger');
 					sendButton.disabled = true;
-					websocket = undefined;
+					websocket_ = undefined;
 					displayMessage('Close', '');
 				};
 			}
@@ -246,11 +270,9 @@
 			var dataField = document.getElementById('dataToSend');
 			if (dataField !== null) {
 				var message = dataField.value;
-				// Blank the field so that the combobox function works as soon as you click into it next.
-				dataField.value = '';
-				websocket.send(message);
+				websocket_.send(message);
 				displayMessage('Sent', message);
-				persistEntry('sentMessages', message);
+				persistEntry('recentMessages', message, 'dataToSend');
 			} else {
 				alert('Websocket not supported');
 			}
@@ -265,8 +287,32 @@
 			var timeStr = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds() + '.' + now.getMilliseconds();
 			newRow.innerHTML = '<td>' + timeStr + '</td><td>' + direction + '</td><td>' + message + '</td>';
 			tableElement.appendChild(newRow);
+
+			// When you click on the row it repopulates the data to send input field.
+			$(newRow).click(function() {
+				var urlElement = document.getElementById('dataToSend');
+				urlElement.value = message;
+			});
 		}
 	}
+
+	$(function() {
+		$('#openButton').tooltip({placement: 'top', trigger: 'hover', title: 'Open/close a websocket to the specified URL.'});
+		$('#sendButton').tooltip({placement: 'Bottom', trigger: 'hover', title: 'Send data.  Enabled websocket is open.'});
+		$('#websocketUrl').tooltip({placement: 'right', trigger: 'hover', title: 'URL of a websocket server. Supports ws:// and wss:// (TLS/SSL).'});
+		$('#dataToSend').tooltip({placement: 'bottom', trigger: 'hover', title: 'Enter any data you wish to send to the server.  Will persist the last 20 unique messages in HTML5 local storage.'});
+		$('#messageList').tooltip({placement: 'top', trigger: 'hover', title: 'Resizable list of messages exchanged with the websocket server during this session.  Click on a message to reselect it for send'});
+
+		// Attempt to persist the default entries.
+		persistEntry('recentServers', 'ws://echo.websocket.org', 'websocketUrl');
+		persistEntry('recentServers', 'wss://echo.websocket.org', 'websocketUrl');
+		persistEntry('recentMessages', '{msg: &#39;Hello, world!&#39;}', 'dataToSend');
+
+		recallEntries('recentServers', 'websocketUrl');
+		recallEntries('recentMessages', 'dataToSend');
+	});
+
+
 </script>
 
 </body>

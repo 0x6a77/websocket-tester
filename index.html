@@ -107,7 +107,7 @@
 	</script>
 </head>
 
-<body onkeyup='handleEnter()'>
+<body onkeyup='handleEnter(event);'>
 
 <div class='span12 row-fluid'>
 	<h3 class='span5'>Websocket Server Tester</h3><br><br><br>
@@ -193,7 +193,7 @@
 		return typeof(Storage) !== 'undefined';
 	}
 
-	function handleEnter() {
+	function handleEnter(event) {
 		if (event.keyCode == 13) {
 			websocketSend();
 		}
@@ -265,12 +265,7 @@
 				if (urlElement !== null) {
 					var url = urlElement.value;
 					websocket_ = new WebSocket(url);
-					displayMessage('Open', url);
-					persistEntry('recentServers', url, 'websocketUrl');
-
-					openButton.innerHTML = 'Close';
-					sendButton.className = sendButton.className.replace('btn\-danger', 'btn\-success');
-					sendButton.disabled = false;
+					openButton.innerHTML = 'Wait';
 				}
 
 				websocket_.onmessage = function(event) {
@@ -285,6 +280,19 @@
 					websocket_ = undefined;
 					displayMessage('Close', '');
 				};
+
+				websocket_.onerror = function(event) {
+					alert('Websocket error' + event);
+				}
+
+				websocket_.onopen = function() {
+					displayMessage('Open', url);
+					persistEntry('recentServers', url, 'websocketUrl');
+
+					openButton.innerHTML = 'Close';
+					sendButton.className = sendButton.className.replace('btn\-danger', 'btn\-success');
+					sendButton.disabled = false;
+				}
 			}
 		} else {
 			alert('Websocket not supported');

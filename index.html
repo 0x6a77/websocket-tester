@@ -259,6 +259,9 @@
 			var sendButton = document.getElementById('sendButton');
 			if (websocket_ !== undefined) {
 				websocket_.close();
+				openButton.innerHTML = 'Open';
+				sendButton.className = sendButton.className.replace('btn\-success', 'btn\-danger');
+				sendButton.disabled = true;
 				websocket_ = undefined;
 			} else {
 				var urlElement = document.getElementById('websocketUrl');
